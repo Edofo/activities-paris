@@ -1,10 +1,9 @@
 import { Check, X } from 'lucide-react'
 import { Card } from '../atoms/Card'
 import { Badge } from '../atoms/Badge'
-import { getVoteForActivity } from '../../utils/voteCalculations'
-import { VoteChoice } from '../../types/vote'
-import type { Activity } from '../../types/activity'
-import type { Vote } from '../../types/vote'
+import type { Activity, Vote } from '@/types'
+import { getVoteForActivity } from '@/utils/voteCalculations'
+import { VoteChoice } from '@/types'
 
 interface ResultsListProps {
   activities: Array<Activity>

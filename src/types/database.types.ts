@@ -41,12 +41,15 @@ export interface Database {
           name: string
           description: string | null
           category:
-            | 'culture'
-            | 'gastronomie'
-            | 'sport'
-            | 'nature'
-            | 'shopping'
-            | 'divertissement'
+            | 'jardin'
+            | 'parc'
+            | 'chateau'
+            | 'musee'
+            | 'expo'
+            | 'spectacle'
+            | 'quartier'
+            | 'tourisme_historique'
+            | 'autre'
           image_url: string
           location: string | null
           arrondissement: string | null
@@ -61,12 +64,15 @@ export interface Database {
           name: string
           description?: string | null
           category:
-            | 'culture'
-            | 'gastronomie'
-            | 'sport'
-            | 'nature'
-            | 'shopping'
-            | 'divertissement'
+            | 'jardin'
+            | 'parc'
+            | 'chateau'
+            | 'musee'
+            | 'expo'
+            | 'spectacle'
+            | 'quartier'
+            | 'tourisme_historique'
+            | 'autre'
           image_url: string
           location?: string | null
           arrondissement?: string | null
@@ -81,12 +87,15 @@ export interface Database {
           name?: string
           description?: string | null
           category?:
-            | 'culture'
-            | 'gastronomie'
-            | 'sport'
-            | 'nature'
-            | 'shopping'
-            | 'divertissement'
+            | 'jardin'
+            | 'parc'
+            | 'chateau'
+            | 'musee'
+            | 'expo'
+            | 'spectacle'
+            | 'quartier'
+            | 'tourisme_historique'
+            | 'autre'
           image_url?: string
           location?: string | null
           arrondissement?: string | null
@@ -128,12 +137,15 @@ export interface Database {
           name: string
           description: string | null
           category:
-            | 'culture'
-            | 'gastronomie'
-            | 'sport'
-            | 'nature'
-            | 'shopping'
-            | 'divertissement'
+            | 'jardin'
+            | 'parc'
+            | 'chateau'
+            | 'musee'
+            | 'expo'
+            | 'spectacle'
+            | 'quartier'
+            | 'tourisme_historique'
+            | 'autre'
           image_url: string
           location: string | null
           arrondissement: string | null

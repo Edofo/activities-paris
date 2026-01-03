@@ -13,12 +13,15 @@ export interface Activity {
 }
 
 export type ActivityCategory =
-  | 'culture'
-  | 'gastronomie'
-  | 'sport'
-  | 'nature'
-  | 'shopping'
-  | 'divertissement'
+  | 'jardin'
+  | 'parc'
+  | 'chateau'
+  | 'musee'
+  | 'expo'
+  | 'spectacle'
+  | 'quartier'
+  | 'tourisme_historique'
+  | 'autre'
 
 export type PriceRange = 'gratuit' | '€' | '€€' | '€€€'
 export type PriceRangeDB = 'gratuit' | 'euro' | 'euro2' | 'euro3'
