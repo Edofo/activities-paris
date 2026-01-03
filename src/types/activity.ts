@@ -10,6 +10,7 @@ export interface Activity {
   duration: string
   tags: Array<string>
   website?: string
+  alreadyDone: boolean
 }
 
 export type ActivityCategory =

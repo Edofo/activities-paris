@@ -57,6 +57,7 @@ export interface Database {
           duration: string | null
           tags: Array<string> | null
           website: string | null
+          already_done: boolean
           created_at: string
         }
         Insert: {
@@ -80,6 +81,7 @@ export interface Database {
           duration?: string | null
           tags?: Array<string> | null
           website?: string | null
+          already_done?: boolean
           created_at?: string
         }
         Update: {
@@ -103,6 +105,7 @@ export interface Database {
           duration?: string | null
           tags?: Array<string> | null
           website?: string | null
+          already_done?: boolean
           created_at?: string
         }
       }
@@ -153,6 +156,7 @@ export interface Database {
           duration: string | null
           tags: Array<string> | null
           website: string | null
+          already_done: boolean
           created_at: string
           likes: number
           dislikes: number

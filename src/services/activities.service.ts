@@ -53,6 +53,7 @@ const transformActivityFromDB = (dbActivity: ActivityRow): Activity => {
     duration: dbActivity.duration || '',
     tags: dbActivity.tags || [],
     website: dbActivity.website || undefined,
+    alreadyDone: dbActivity.already_done,
   }
 }
 

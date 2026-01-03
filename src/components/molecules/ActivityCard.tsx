@@ -54,6 +54,19 @@ export const ActivityCard = ({
         >
           <Badge variant="default">{priceLabels[activity.priceRange]}</Badge>
         </div>
+        {activity.alreadyDone && (
+          <div
+            className="absolute"
+            style={{
+              bottom: `${badgeOffset}px`,
+              left: `${badgeOffset}px`,
+            }}
+          >
+            <Badge variant="default" className="bg-green-500 text-white">
+              Déjà fait
+            </Badge>
+          </div>
+        )}
       </div>
       <CardContent className="p-4">
         <h3 className="text-xl font-bold text-[#0f3460] mb-2">
