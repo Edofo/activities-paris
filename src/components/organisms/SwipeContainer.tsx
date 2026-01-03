@@ -6,7 +6,7 @@ import { ProgressBar } from '@/components/atoms'
 import { calculateVoteProgress } from '@/utils/calculations'
 import { card } from '@/styles'
 import { cn } from '@/lib/utils'
-import { VoteChoice } from '@/types/vote'
+import { VoteChoice } from '@/types'
 
 export interface SwipeContainerProps {
   activities: Array<Activity>

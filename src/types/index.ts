@@ -7,6 +7,7 @@ import type {
   VoteRow,
 } from './database'
 
+// Re-export all types and values from sub-modules
 export * from './activity'
 export * from './vote'
 export * from './database'

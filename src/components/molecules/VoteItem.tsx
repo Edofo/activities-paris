@@ -5,7 +5,7 @@ import { Badge } from '@/components/atoms/Badge'
 import { Button } from '@/components/atoms/Button'
 import { icons } from '@/styles'
 import { cn } from '@/lib/utils'
-import { VoteChoice } from '@/types/vote'
+import { VoteChoice } from '@/types'
 
 export interface VoteItemProps {
   activity: Activity

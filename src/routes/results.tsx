@@ -6,7 +6,7 @@ import {
   getActivitiesByVote,
 } from '../utils/voteCalculations'
 import { ROUTES } from '../constants'
-import { VoteChoice } from '@/types/vote'
+import { VoteChoice } from '@/types'
 import { getCurrentUser } from '@/utils/storage'
 import { Button, Card } from '@/components/atoms'
 

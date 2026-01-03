@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { SWIPE_CONFIG } from '../constants/swipeConfig'
-import type { VoteChoice } from '@/types/vote'
+import type { VoteChoice } from '@/types'
 
 export const useVoteHistory = (
   maxHistory: number = SWIPE_CONFIG.maxHistoryLength,

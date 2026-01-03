@@ -10,7 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/atoms/Card'
-import { VoteChoice } from '@/types/vote'
+import { VoteChoice } from '@/types'
 
 export interface VoteSummaryProps {
   user: User

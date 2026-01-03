@@ -29,6 +29,11 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
+          // Keep types together - don't split type files
+          if (id.includes('/types/') || id.includes('\\types\\')) {
+            return 'types'
+          }
+
           // Split node_modules into vendor chunks
           if (id.includes('node_modules')) {
             // TanStack libraries
@@ -65,9 +70,6 @@ export default defineConfig({
             if (id.includes('react') || id.includes('react-dom')) {
               return 'react-vendor'
             }
-
-            // Other vendor libraries
-            return 'vendor'
           }
         },
       },

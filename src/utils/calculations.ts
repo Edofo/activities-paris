@@ -1,5 +1,5 @@
 import type { Activity, UserVotes, Vote } from '@/types'
-import { VoteChoice } from '@/types/vote'
+import { VoteChoice } from '@/types'
 
 export interface ActivityStats {
   activity: Activity

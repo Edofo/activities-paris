@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import type { UserVotes, Vote, VoteSession } from '@/types'
-import type { VoteChoice } from '@/types/vote'
+import type { UserVotes, Vote, VoteChoice, VoteSession } from '@/types'
 import { queryKeys } from '@/constants'
 import {
   generateUserId,
