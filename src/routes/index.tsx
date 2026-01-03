@@ -44,6 +44,7 @@ const HomePage = () => {
         duration: r.duration,
         tags: r.tags,
         website: r.website,
+        alreadyDone: r.alreadyDone,
       },
       likes: r.likes,
       dislikes: r.dislikes,
