@@ -40,9 +40,7 @@ export const ResultsList = ({
                     </Badge>
                   )}
                 </div>
-                <p className="text-sm text-gray-600 line-clamp-2">
-                  {activity.description}
-                </p>
+                <p className="text-sm text-gray-600">{activity.description}</p>
               </div>
 
               <div className="flex gap-2 ml-4">

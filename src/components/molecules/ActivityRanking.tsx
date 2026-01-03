@@ -5,6 +5,7 @@ import { Badge } from '@/components/atoms/Badge'
 import { ProgressBar } from '@/components/atoms/ProgressBar'
 import { icons } from '@/styles'
 import { cn } from '@/lib/utils'
+import { getCategoryLabel } from '@/utils'
 
 export interface ActivityRankingProps {
   stats: ActivityStats
@@ -99,7 +100,7 @@ export const ActivityRanking = ({
                 {stats.activity.name}
               </h3>
               <Badge variant={stats.activity.category}>
-                {stats.activity.category}
+                {getCategoryLabel(stats.activity.category)}
               </Badge>
             </div>
 

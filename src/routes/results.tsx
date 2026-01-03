@@ -97,7 +97,7 @@ const ResultsPage = () => {
                     <h3 className="font-semibold text-lg mb-2">
                       {activity.name}
                     </h3>
-                    <p className="text-sm text-gray-600 line-clamp-2">
+                    <p className="text-sm text-gray-600">
                       {activity.description}
                     </p>
                   </Card>
@@ -117,7 +117,7 @@ const ResultsPage = () => {
                     <h3 className="font-semibold text-lg mb-2">
                       {activity.name}
                     </h3>
-                    <p className="text-sm text-gray-600 line-clamp-2">
+                    <p className="text-sm text-gray-600">
                       {activity.description}
                     </p>
                   </Card>

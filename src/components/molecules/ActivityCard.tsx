@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
 import { container, icons, spacing } from '@/styles'
 import { cn } from '@/lib/utils'
+import { getCategoryLabel } from '@/utils'
 
 export interface ActivityCardProps {
   activity: Activity
@@ -43,7 +44,9 @@ export const ActivityCard = ({
           className="absolute"
           style={{ top: `${badgeOffset}px`, left: `${badgeOffset}px` }}
         >
-          <Badge variant={activity.category}>{activity.category}</Badge>
+          <Badge variant={activity.category}>
+            {getCategoryLabel(activity.category)}
+          </Badge>
         </div>
         <div
           className="absolute"
@@ -57,9 +60,7 @@ export const ActivityCard = ({
           {activity.name}
         </h3>
         {showDescription && (
-          <p className="text-sm text-gray-600 mb-4 line-clamp-2">
-            {activity.description}
-          </p>
+          <p className="text-sm text-gray-600 mb-4">{activity.description}</p>
         )}
         <div className="space-y-2">
           <div className="flex items-center text-sm text-gray-500">

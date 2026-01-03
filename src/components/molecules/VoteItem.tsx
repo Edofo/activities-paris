@@ -5,6 +5,7 @@ import { Badge } from '@/components/atoms/Badge'
 import { Button } from '@/components/atoms/Button'
 import { icons } from '@/styles'
 import { cn } from '@/lib/utils'
+import { getCategoryLabel } from '@/utils'
 import { VoteChoice } from '@/types'
 
 export interface VoteItemProps {
@@ -46,7 +47,9 @@ export const VoteItem = ({
               {activity.name}
             </h3>
             <div className="flex items-center gap-2">
-              <Badge variant={activity.category}>{activity.category}</Badge>
+              <Badge variant={activity.category}>
+                {getCategoryLabel(activity.category)}
+              </Badge>
               {vote ? (
                 <Badge
                   variant={
