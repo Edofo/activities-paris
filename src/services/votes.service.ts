@@ -1,5 +1,5 @@
-import type { Vote, VoteChoice } from '@/types'
 import type { VoteInsert, VoteRow, VoteUpdate } from '@/types/database'
+import type { Vote, VoteChoice } from '@/types'
 import { database } from '@/constants/database'
 import { supabase } from '@/lib/supabase'
 

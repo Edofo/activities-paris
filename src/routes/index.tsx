@@ -1,9 +1,8 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { Trophy, Users } from 'lucide-react'
-import { useMemo, useState } from 'react'
-import type { Activity, VoteChoice } from '@/types'
+import { Suspense, lazy, useMemo, useState } from 'react'
 import type { ActivityStats } from '@/utils/calculations'
-import { ActivityDetailModal } from '@/components/molecules/ActivityDetailModal'
+import type { Activity, VoteChoice } from '@/types'
 import { ActivityRanking } from '@/components/molecules/ActivityRanking'
 import { Button } from '@/components/atoms/Button'
 import { ROUTES } from '@/constants'
@@ -17,6 +16,12 @@ import {
 } from '@/queries/useVotesSupabase'
 import { icons } from '@/styles'
 
+const ActivityDetailModal = lazy(() =>
+  import('@/components/molecules/ActivityDetailModal').then((mod) => ({
+    default: mod.ActivityDetailModal,
+  })),
+)
+
 const HomePage = () => {
   const { largeIconSize, mediumIconSize } = icons
 
@@ -26,6 +31,8 @@ const HomePage = () => {
   const { data: userVotes = [] } = useUserVotes(currentUser?.id)
   const createVote = useCreateVote()
   const updateVote = useUpdateVote()
+
+  console.log(createVote, updateVote)
 
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(
     null,
@@ -85,12 +92,10 @@ const HomePage = () => {
   }
 
   const handleVote = (activityId: string, choice: VoteChoice) => {
+    console.log(activityId, choice)
     if (!currentUser) return
-
     const existingVote = userVotes.find((v) => v.activityId === activityId)
-
     if (existingVote?.id) {
-      // Update existing vote
       updateVote.mutate(
         { voteId: existingVote.id, choice },
         {
@@ -100,7 +105,6 @@ const HomePage = () => {
         },
       )
     } else {
-      // Create new vote
       createVote.mutate(
         {
           user_id: currentUser.id,
@@ -214,16 +218,20 @@ const HomePage = () => {
           </div>
         )}
 
+        {/* {selectedActivity && <></>} */}
+
         {selectedActivity && (
-          <ActivityDetailModal
-            isOpen={!!selectedActivity}
-            activity={selectedActivity}
-            vote={selectedActivityVote}
-            currentUserId={currentUser?.id}
-            onClose={() => setSelectedActivity(null)}
-            onVote={handleVote}
-            isVoting={createVote.isPending || updateVote.isPending}
-          />
+          <Suspense fallback={null}>
+            <ActivityDetailModal
+              isOpen={!!selectedActivity}
+              activity={selectedActivity}
+              vote={selectedActivityVote}
+              currentUserId={currentUser?.id}
+              onClose={() => setSelectedActivity(null)}
+              onVote={handleVote}
+              isVoting={createVote.isPending || updateVote.isPending}
+            />
+          </Suspense>
         )}
       </div>
     </div>

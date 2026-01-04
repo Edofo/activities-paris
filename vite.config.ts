@@ -58,13 +58,13 @@ export default defineConfig({
               return 'supabase'
             }
 
-            // UI libraries
-            if (id.includes('framer-motion')) {
-              return 'framer-motion'
-            }
-            if (id.includes('lucide-react')) {
-              return 'lucide-icons'
-            }
+            // // UI libraries
+            // if (id.includes('framer-motion')) {
+            //   return 'framer-motion'
+            // }
+            // if (id.includes('lucide-react')) {
+            //   return 'lucide-icons'
+            // }
 
             // React core
             if (id.includes('react') || id.includes('react-dom')) {

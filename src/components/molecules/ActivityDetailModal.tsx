@@ -2,7 +2,7 @@ import { Clock, ExternalLink, Heart, MapPin, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import type { Activity, Vote } from '@/types'
-import { VoteChoice } from '@/types'
+import { VoteChoice } from '@/types/vote'
 import {
   Card,
   CardContent,

@@ -9,9 +9,12 @@ import type {
 
 // Re-export all types and values from sub-modules
 export * from './activity'
-export * from './vote'
 export * from './database'
 export * from './database.types'
+
+// Explicitly export VoteChoice enum to avoid hoisting issues in production
+export { VoteChoice } from './vote'
+export type { Vote, UserVotes, VoteSession } from './vote'
 
 export type User = UserRow
 export type ActivityDB = ActivityRow
