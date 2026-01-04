@@ -4,7 +4,7 @@ import { queryKeys } from '@/constants'
 import { usersService, votesService } from '@/services'
 
 export const useUserVotes = (userId: string | undefined) => {
-  return useQuery<Array<Vote>>({
+  return useQuery<Array<Vote>, Error>({
     queryKey: queryKeys.votes.byUser(userId!),
     queryFn: () => votesService.getByUser(userId!),
     enabled: !!userId,
@@ -77,7 +77,7 @@ export const useCreateUser = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (name: string) => usersService.create(name),
+    mutationFn: (name: string) => usersService.findOrCreate(name),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.users.current })
       queryClient.invalidateQueries({ queryKey: queryKeys.users.all })

@@ -8,10 +8,7 @@ import {
 } from '@/components/molecules'
 import { SwipeContainer } from '@/components/organisms'
 import { SWIPE_CONFIG } from '@/constants/swipeConfig'
-import {
-  useActivities,
-  useUnvotedActivities,
-} from '@/queries/useActivitiesSupabase'
+import { useActivities } from '@/queries/useActivitiesSupabase'
 import {
   useCreateUser,
   useCreateVote,
@@ -24,8 +21,9 @@ import {
 const VotePage = () => {
   const { data: allActivities = [] } = useActivities()
   const { data: currentUser } = useCurrentUser()
-  const { data: userVotes = [] } = useUserVotes(currentUser?.id)
-  const { data: unvotedActivities = [] } = useUnvotedActivities(currentUser?.id)
+  const { data: userVotes = [], isFetched: isUserVotesFetched } = useUserVotes(
+    currentUser?.id,
+  )
 
   const createUser = useCreateUser()
   const createVote = useCreateVote()
@@ -34,38 +32,27 @@ const VotePage = () => {
 
   const [showUserNameModal, setShowUserNameModal] = useState(false)
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [voteHistory, setVoteHistory] = useState<Array<number>>([])
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(
     null,
   )
 
+  useEffect(() => {
+    if (isUserVotesFetched) {
+      setCurrentIndex(userVotes.length)
+    }
+  }, [isUserVotesFetched, userVotes.length])
+
   const totalActivitiesRef = useRef<number | null>(null)
 
-  const [localActivities, setLocalActivities] = useState<Array<Activity>>([])
-
   useEffect(() => {
-    const newActivities =
-      unvotedActivities.length > 0 ? unvotedActivities : allActivities
-    if (localActivities.length === 0 && newActivities.length > 0) {
-      setLocalActivities(newActivities)
+    if (allActivities.length > 0) {
       if (totalActivitiesRef.current === null) {
-        totalActivitiesRef.current = newActivities.length
+        totalActivitiesRef.current = allActivities.length
       }
     }
-  }, [unvotedActivities, allActivities, localActivities.length])
+  }, [allActivities])
 
-  const activities =
-    localActivities.length > 0
-      ? localActivities
-      : unvotedActivities.length > 0
-        ? unvotedActivities
-        : allActivities
-
-  const totalActivities =
-    totalActivitiesRef.current ??
-    (unvotedActivities.length > 0
-      ? unvotedActivities.length
-      : allActivities.length)
+  const totalActivities = totalActivitiesRef.current ?? allActivities.length
 
   useEffect(() => {
     if (!currentUser && !createUser.isPending) {
@@ -96,19 +83,10 @@ const VotePage = () => {
           setTimeout(() => {
             const newIndex = currentIndex + 1
             setCurrentIndex(newIndex)
-            setVoteHistory((prev) => [...prev, currentIndex])
           }, SWIPE_CONFIG.animationDuration)
         },
       },
     )
-  }
-
-  const handleRewind = () => {
-    if (voteHistory.length > 0) {
-      const previousIndex = voteHistory[voteHistory.length - 1]
-      setVoteHistory((prev) => prev.slice(0, -1))
-      setCurrentIndex(previousIndex)
-    }
   }
 
   const handleRestart = () => {
@@ -121,16 +99,10 @@ const VotePage = () => {
       resetVotes.mutate(currentUser.id, {
         onSuccess: () => {
           setCurrentIndex(0)
-          setVoteHistory([])
-          setLocalActivities([])
           totalActivitiesRef.current = null
         },
       })
     }
-  }
-
-  const handleActivityClick = (activity: Activity) => {
-    setSelectedActivity(activity)
   }
 
   const handleVote = (activityId: string, choice: VoteChoice) => {
@@ -182,15 +154,13 @@ const VotePage = () => {
     )
   }
 
-  const isCompleted = currentIndex >= totalActivities
-
   const selectedActivityVote = selectedActivity
     ? userVotes.find((v) => v.activityId === selectedActivity.id) || null
     : null
 
   if (
-    isCompleted ||
-    (unvotedActivities.length === 0 && totalActivitiesRef.current !== null)
+    currentIndex >= totalActivities ||
+    (allActivities.length === 0 && totalActivitiesRef.current !== null)
   ) {
     return (
       <div className="min-h-screen bg-[#fafafa] py-8">
@@ -200,7 +170,7 @@ const VotePage = () => {
             votes={userVotes}
             activities={allActivities}
             onRestart={handleRestart}
-            onActivityClick={handleActivityClick}
+            onActivityClick={setSelectedActivity}
           />
           {selectedActivity && (
             <ActivityDetailModal
@@ -232,12 +202,13 @@ const VotePage = () => {
         </div>
 
         <SwipeContainer
-          activities={activities}
+          activities={allActivities}
           currentIndex={currentIndex}
           totalActivities={totalActivities}
+          votedCount={userVotes.length}
           onSwipe={handleSwipe}
-          onRewind={handleRewind}
-          canRewind={voteHistory.length > 0}
+          onRewind={() => setCurrentIndex((prev) => prev - 1)}
+          canRewind={currentIndex > 0}
         />
       </div>
     </div>

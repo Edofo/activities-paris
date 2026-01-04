@@ -19,6 +19,31 @@ export const usersService = {
     return data
   },
 
+  async findByName(name: string): Promise<User | null> {
+    const trimmedName = name.trim()
+    const { data, error } = await supabase
+      .from(database.tables.users)
+      .select('*')
+      .ilike(database.columns.name, trimmedName)
+      .maybeSingle()
+
+    if (error) {
+      throw new Error(`Failed to find user by name: ${error.message}`)
+    }
+    return data
+  },
+
+  async findOrCreate(name: string): Promise<User> {
+    const existingUser = await this.findByName(name.trim())
+
+    if (existingUser) {
+      localStorage.setItem(config.storageKeys.localUser, existingUser.id)
+      return existingUser
+    }
+
+    return await this.create(name.trim())
+  },
+
   async getCurrent(): Promise<User | null> {
     const userId = localStorage.getItem(config.storageKeys.localUser)
     if (!userId) return null

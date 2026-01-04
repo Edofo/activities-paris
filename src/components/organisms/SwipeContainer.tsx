@@ -12,6 +12,7 @@ export interface SwipeContainerProps {
   activities: Array<Activity>
   currentIndex: number
   totalActivities: number
+  votedCount: number
   onSwipe: (activityId: string, choice: VoteChoice) => void
   onRewind: () => void
   canRewind: boolean
@@ -22,6 +23,7 @@ export const SwipeContainer = ({
   activities,
   currentIndex,
   totalActivities,
+  votedCount,
   onSwipe,
   onRewind,
   canRewind,
@@ -32,7 +34,7 @@ export const SwipeContainer = ({
     null,
   )
 
-  const progress = calculateVoteProgress(currentIndex, totalActivities)
+  const progress = calculateVoteProgress(votedCount, totalActivities)
 
   if (
     currentIndex >= totalActivities ||
@@ -66,7 +68,7 @@ export const SwipeContainer = ({
       <div className="mb-6">
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm font-medium text-gray-700">
-            Activity {currentIndex + 1} of {totalActivities}
+            {votedCount} sur {totalActivities}
           </span>
           <span className="text-sm text-gray-500">{progress}%</span>
         </div>

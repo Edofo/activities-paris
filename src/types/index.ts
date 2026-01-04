@@ -14,7 +14,7 @@ export * from './database.types'
 
 // Explicitly export VoteChoice enum to avoid hoisting issues in production
 export { VoteChoice } from './vote'
-export type { Vote, UserVotes, VoteSession } from './vote'
+export type { Vote } from './vote'
 
 export type User = UserRow
 export type ActivityDB = ActivityRow
