@@ -3,6 +3,15 @@ import type { VoteInsert, VoteRow, VoteUpdate } from '@/types/database'
 import { database } from '@/constants/database'
 import { supabase } from '@/lib/supabase'
 
+const transformVoteFromDB = (dbVote: VoteRow): Vote => {
+  return {
+    id: dbVote.id,
+    activityId: dbVote.activity_id,
+    choice: dbVote.choice as VoteChoice,
+    votedAt: dbVote.voted_at,
+  }
+}
+
 export const votesService = {
   async getByUser(userId: string): Promise<Array<Vote>> {
     const { data, error } = await supabase
@@ -13,6 +22,23 @@ export const votesService = {
 
     if (error) throw error
     return data.map(transformVoteFromDB)
+  },
+
+  async getByActivityAndUser(
+    userId: string,
+    activityId: string,
+  ): Promise<Vote | null> {
+    const { data, error } = await supabase
+      .from(database.tables.votes)
+      .select('*')
+      .eq(database.columns.userId, userId)
+      .eq(database.columns.activityId, activityId)
+      .maybeSingle()
+
+    if (error) throw error
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (!data) return null
+    return transformVoteFromDB(data)
   },
 
   async create(vote: VoteInsert): Promise<Vote> {
@@ -75,12 +101,4 @@ export const votesService = {
 
     if (error) throw error
   },
-}
-
-const transformVoteFromDB = (dbVote: VoteRow): Vote => {
-  return {
-    activityId: dbVote.activity_id,
-    choice: dbVote.choice as VoteChoice,
-    votedAt: dbVote.voted_at,
-  }
 }

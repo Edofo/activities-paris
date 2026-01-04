@@ -10,18 +10,12 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VoteRouteImport } from './routes/vote'
-import { Route as ResultsRouteImport } from './routes/results'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DemoTanstackQueryRouteImport } from './routes/demo/tanstack-query'
 
 const VoteRoute = VoteRouteImport.update({
   id: '/vote',
   path: '/vote',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ResultsRoute = ResultsRouteImport.update({
-  id: '/results',
-  path: '/results',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -37,34 +31,30 @@ const DemoTanstackQueryRoute = DemoTanstackQueryRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/results': typeof ResultsRoute
   '/vote': typeof VoteRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/results': typeof ResultsRoute
   '/vote': typeof VoteRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/results': typeof ResultsRoute
   '/vote': typeof VoteRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/results' | '/vote' | '/demo/tanstack-query'
+  fullPaths: '/' | '/vote' | '/demo/tanstack-query'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/results' | '/vote' | '/demo/tanstack-query'
-  id: '__root__' | '/' | '/results' | '/vote' | '/demo/tanstack-query'
+  to: '/' | '/vote' | '/demo/tanstack-query'
+  id: '__root__' | '/' | '/vote' | '/demo/tanstack-query'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ResultsRoute: typeof ResultsRoute
   VoteRoute: typeof VoteRoute
   DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute
 }
@@ -76,13 +66,6 @@ declare module '@tanstack/react-router' {
       path: '/vote'
       fullPath: '/vote'
       preLoaderRoute: typeof VoteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/results': {
-      id: '/results'
-      path: '/results'
-      fullPath: '/results'
-      preLoaderRoute: typeof ResultsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -104,7 +87,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ResultsRoute: ResultsRoute,
   VoteRoute: VoteRoute,
   DemoTanstackQueryRoute: DemoTanstackQueryRoute,
 }

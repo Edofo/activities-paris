@@ -17,6 +17,7 @@ export interface VoteSummaryProps {
   votes: Array<Vote>
   activities: Array<Activity>
   onRestart?: () => void
+  onActivityClick?: (activity: Activity) => void
 }
 
 export const VoteSummary = ({
@@ -24,6 +25,7 @@ export const VoteSummary = ({
   votes,
   activities,
   onRestart,
+  onActivityClick,
 }: VoteSummaryProps) => {
   const { xxlIconSize } = icons
   const activityMap = new Map(activities.map((a) => [a.id, a]))
@@ -74,6 +76,7 @@ export const VoteSummary = ({
                   key={vote.activityId}
                   activity={activity}
                   vote={vote}
+                  onClick={() => onActivityClick?.(activity)}
                 />
               )
             })}

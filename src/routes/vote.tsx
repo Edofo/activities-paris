@@ -2,6 +2,13 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useRef, useState } from 'react'
 import type { Activity, VoteChoice } from '@/types'
 import {
+  ActivityDetailModal,
+  UserNameModal,
+  VoteSummary,
+} from '@/components/molecules'
+import { SwipeContainer } from '@/components/organisms'
+import { SWIPE_CONFIG } from '@/constants/swipeConfig'
+import {
   useActivities,
   useUnvotedActivities,
 } from '@/queries/useActivitiesSupabase'
@@ -10,11 +17,9 @@ import {
   useCreateVote,
   useCurrentUser,
   useResetVotes,
+  useUpdateVote,
   useUserVotes,
 } from '@/queries/useVotesSupabase'
-import { SwipeContainer } from '@/components/organisms'
-import { UserNameModal, VoteSummary } from '@/components/molecules'
-import { SWIPE_CONFIG } from '@/constants/swipeConfig'
 
 const VotePage = () => {
   const { data: allActivities = [] } = useActivities()
@@ -24,11 +29,15 @@ const VotePage = () => {
 
   const createUser = useCreateUser()
   const createVote = useCreateVote()
+  const updateVote = useUpdateVote()
   const resetVotes = useResetVotes()
 
   const [showUserNameModal, setShowUserNameModal] = useState(false)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [voteHistory, setVoteHistory] = useState<Array<number>>([])
+  const [selectedActivity, setSelectedActivity] = useState<Activity | null>(
+    null,
+  )
 
   const totalActivitiesRef = useRef<number | null>(null)
 
@@ -106,7 +115,7 @@ const VotePage = () => {
     if (!currentUser) return
     if (
       window.confirm(
-        'Are you sure you want to restart? All your votes will be deleted.',
+        'Êtes-vous sûr de vouloir recommencer ? Tous vos votes seront supprimés.',
       )
     ) {
       resetVotes.mutate(currentUser.id, {
@@ -120,6 +129,42 @@ const VotePage = () => {
     }
   }
 
+  const handleActivityClick = (activity: Activity) => {
+    setSelectedActivity(activity)
+  }
+
+  const handleVote = (activityId: string, choice: VoteChoice) => {
+    if (!currentUser) return
+
+    const existingVote = userVotes.find((v) => v.activityId === activityId)
+
+    if (existingVote?.id) {
+      // Update existing vote
+      updateVote.mutate(
+        { voteId: existingVote.id, choice },
+        {
+          onSuccess: () => {
+            // Optionally close modal after a short delay
+          },
+        },
+      )
+    } else {
+      // Create new vote
+      createVote.mutate(
+        {
+          user_id: currentUser.id,
+          activity_id: activityId,
+          choice,
+        },
+        {
+          onSuccess: () => {
+            // Optionally close modal after a short delay
+          },
+        },
+      )
+    }
+  }
+
   if (!currentUser) {
     return (
       <div className="min-h-screen bg-[#fafafa] flex items-center justify-center">
@@ -130,7 +175,7 @@ const VotePage = () => {
         {createUser.isPending && (
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#e94560] mx-auto mb-4"></div>
-            <p className="text-gray-600">Creating profile...</p>
+            <p className="text-gray-600">Création du profil...</p>
           </div>
         )}
       </div>
@@ -138,6 +183,10 @@ const VotePage = () => {
   }
 
   const isCompleted = currentIndex >= totalActivities
+
+  const selectedActivityVote = selectedActivity
+    ? userVotes.find((v) => v.activityId === selectedActivity.id) || null
+    : null
 
   if (
     isCompleted ||
@@ -151,7 +200,19 @@ const VotePage = () => {
             votes={userVotes}
             activities={allActivities}
             onRestart={handleRestart}
+            onActivityClick={handleActivityClick}
           />
+          {selectedActivity && (
+            <ActivityDetailModal
+              isOpen={!!selectedActivity}
+              activity={selectedActivity}
+              vote={selectedActivityVote}
+              currentUserId={currentUser.id}
+              onClose={() => setSelectedActivity(null)}
+              onVote={handleVote}
+              isVoting={createVote.isPending || updateVote.isPending}
+            />
+          )}
         </div>
       </div>
     )
@@ -165,7 +226,8 @@ const VotePage = () => {
             Bonjour {currentUser.name}! 👋
           </h1>
           <p className="text-gray-600">
-            Glissez vers la droite pour aimer, vers la gauche pour détester
+            Glissez vers la droite pour faire un vote positif, vers la gauche
+            pour un vote négatif
           </p>
         </div>
 

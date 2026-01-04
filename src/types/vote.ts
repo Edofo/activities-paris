@@ -4,6 +4,7 @@ export enum VoteChoice {
 }
 
 export interface Vote {
+  id?: string
   activityId: string
   choice: VoteChoice
   votedAt: string

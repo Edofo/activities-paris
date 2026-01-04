@@ -11,6 +11,20 @@ export const useUserVotes = (userId: string | undefined) => {
   })
 }
 
+export const useVoteByActivity = (
+  userId: string | undefined,
+  activityId: string | null,
+) => {
+  return useQuery<Vote | null>({
+    queryKey: [...queryKeys.votes.all, 'byActivity', userId, activityId],
+    queryFn: () =>
+      userId && activityId
+        ? votesService.getByActivityAndUser(userId, activityId)
+        : Promise.resolve(null),
+    enabled: !!userId && !!activityId,
+  })
+}
+
 export const useCreateVote = () => {
   const queryClient = useQueryClient()
 

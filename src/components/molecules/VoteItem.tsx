@@ -12,6 +12,7 @@ export interface VoteItemProps {
   activity: Activity
   vote: Vote | null
   onEdit?: () => void
+  onClick?: () => void
   className?: string
 }
 
@@ -19,12 +20,20 @@ export const VoteItem = ({
   activity,
   vote,
   onEdit,
+  onClick,
   className,
 }: VoteItemProps) => {
   const { rankingImageSize, smallIconSize, mediumIconSize } = icons
 
   return (
-    <Card className={cn('overflow-hidden', className)}>
+    <Card
+      className={cn(
+        'overflow-hidden',
+        onClick && 'cursor-pointer hover:shadow-lg transition-shadow',
+        className,
+      )}
+      onClick={onClick}
+    >
       <div className="flex gap-4">
         <div
           className="shrink-0 rounded-lg overflow-hidden bg-gray-200"

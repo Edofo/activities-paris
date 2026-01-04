@@ -11,12 +11,14 @@ export interface ActivityRankingProps {
   stats: ActivityStats
   position: number
   className?: string
+  onClick?: () => void
 }
 
 export const ActivityRanking = ({
   stats,
   position,
   className,
+  onClick,
 }: ActivityRankingProps) => {
   const { medalSize, rankingImageSize, rankingPositionSize } = icons
 
@@ -57,9 +59,11 @@ export const ActivityRanking = ({
     <Card
       className={cn(
         'transition-all hover:shadow-lg',
+        onClick && 'cursor-pointer',
         position <= 3 && getMedalBg(),
         className,
       )}
+      onClick={onClick}
     >
       <CardContent className="p-4">
         <div className="flex items-start gap-4">

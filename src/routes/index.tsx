@@ -1,19 +1,35 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { Trophy, Users } from 'lucide-react'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
+import type { Activity, VoteChoice } from '@/types'
 import type { ActivityStats } from '@/utils/calculations'
-import { useActivityRanking } from '@/queries/useActivitiesSupabase'
-import { useUsers } from '@/queries/useVotesSupabase'
+import { ActivityDetailModal } from '@/components/molecules/ActivityDetailModal'
 import { ActivityRanking } from '@/components/molecules/ActivityRanking'
 import { Button } from '@/components/atoms/Button'
-import { icons } from '@/styles'
 import { ROUTES } from '@/constants'
+import { useActivityRanking } from '@/queries/useActivitiesSupabase'
+import {
+  useCreateVote,
+  useCurrentUser,
+  useUpdateVote,
+  useUserVotes,
+  useUsers,
+} from '@/queries/useVotesSupabase'
+import { icons } from '@/styles'
 
 const HomePage = () => {
   const { largeIconSize, mediumIconSize } = icons
 
   const { data: ranking = [], isLoading: rankingLoading } = useActivityRanking()
   const { data: users = [], isLoading: usersLoading } = useUsers()
+  const { data: currentUser } = useCurrentUser()
+  const { data: userVotes = [] } = useUserVotes(currentUser?.id)
+  const createVote = useCreateVote()
+  const updateVote = useUpdateVote()
+
+  const [selectedActivity, setSelectedActivity] = useState<Activity | null>(
+    null,
+  )
 
   const sortedStats = useMemo(() => {
     if (!ranking.length) return []
@@ -51,7 +67,7 @@ const HomePage = () => {
       <div className="min-h-screen bg-[#fafafa] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#e94560] mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <p className="text-gray-600">Chargement...</p>
         </div>
       </div>
     )
@@ -59,6 +75,46 @@ const HomePage = () => {
 
   const top3 = sortedStats.slice(0, 3)
   const others = sortedStats.slice(3)
+
+  const selectedActivityVote = selectedActivity
+    ? userVotes.find((v) => v.activityId === selectedActivity.id) || null
+    : null
+
+  const handleActivityClick = (stats: ActivityStats) => {
+    setSelectedActivity(stats.activity)
+  }
+
+  const handleVote = (activityId: string, choice: VoteChoice) => {
+    if (!currentUser) return
+
+    const existingVote = userVotes.find((v) => v.activityId === activityId)
+
+    if (existingVote?.id) {
+      // Update existing vote
+      updateVote.mutate(
+        { voteId: existingVote.id, choice },
+        {
+          onSuccess: () => {
+            // Optionally close modal after a short delay
+          },
+        },
+      )
+    } else {
+      // Create new vote
+      createVote.mutate(
+        {
+          user_id: currentUser.id,
+          activity_id: activityId,
+          choice,
+        },
+        {
+          onSuccess: () => {
+            // Optionally close modal after a short delay
+          },
+        },
+      )
+    }
+  }
 
   return (
     <div className="min-h-screen bg-[#fafafa] py-8">
@@ -98,19 +154,31 @@ const HomePage = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {top3[1] && (
                 <div className="order-2 md:order-1">
-                  <ActivityRanking stats={top3[1]} position={2} />
+                  <ActivityRanking
+                    stats={top3[1]}
+                    position={2}
+                    onClick={() => handleActivityClick(top3[1])}
+                  />
                 </div>
               )}
 
               {top3[0] && (
                 <div className="order-1 md:order-2">
-                  <ActivityRanking stats={top3[0]} position={1} />
+                  <ActivityRanking
+                    stats={top3[0]}
+                    position={1}
+                    onClick={() => handleActivityClick(top3[0])}
+                  />
                 </div>
               )}
 
               {top3[2] && (
                 <div className="order-3">
-                  <ActivityRanking stats={top3[2]} position={3} />
+                  <ActivityRanking
+                    stats={top3[2]}
+                    position={3}
+                    onClick={() => handleActivityClick(top3[2])}
+                  />
                 </div>
               )}
             </div>
@@ -128,6 +196,7 @@ const HomePage = () => {
                   key={stats.activity.id}
                   stats={stats}
                   position={index + 4}
+                  onClick={() => handleActivityClick(stats)}
                 />
               ))}
             </div>
@@ -143,6 +212,18 @@ const HomePage = () => {
               <Button variant="primary">Commencer à voter</Button>
             </Link>
           </div>
+        )}
+
+        {selectedActivity && (
+          <ActivityDetailModal
+            isOpen={!!selectedActivity}
+            activity={selectedActivity}
+            vote={selectedActivityVote}
+            currentUserId={currentUser?.id}
+            onClose={() => setSelectedActivity(null)}
+            onVote={handleVote}
+            isVoting={createVote.isPending || updateVote.isPending}
+          />
         )}
       </div>
     </div>
