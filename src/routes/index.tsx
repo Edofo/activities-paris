@@ -32,8 +32,6 @@ const HomePage = () => {
   const createVote = useCreateVote()
   const updateVote = useUpdateVote()
 
-  console.log(createVote, updateVote)
-
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(
     null,
   )
@@ -92,7 +90,6 @@ const HomePage = () => {
   }
 
   const handleVote = (activityId: string, choice: VoteChoice) => {
-    console.log(activityId, choice)
     if (!currentUser) return
     const existingVote = userVotes.find((v) => v.activityId === activityId)
     if (existingVote?.id) {
