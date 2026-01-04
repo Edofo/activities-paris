@@ -162,9 +162,11 @@ const VotePage = () => {
       <div className="max-w-4xl mx-auto px-4">
         <div className="mb-4 text-center">
           <h1 className="text-3xl font-bold text-[#0f3460] mb-2">
-            Hello {currentUser.name}! 👋
+            Bonjour {currentUser.name}! 👋
           </h1>
-          <p className="text-gray-600">Swipe right to like, left to dislike</p>
+          <p className="text-gray-600">
+            Glissez vers la droite pour aimer, vers la gauche pour détester
+          </p>
         </div>
 
         <SwipeContainer

@@ -2,26 +2,12 @@ import { Link, createFileRoute } from '@tanstack/react-router'
 import { Trophy, Users } from 'lucide-react'
 import { useMemo } from 'react'
 import type { ActivityStats } from '@/utils/calculations'
-import type { PriceRange } from '@/types'
 import { useActivityRanking } from '@/queries/useActivitiesSupabase'
 import { useUsers } from '@/queries/useVotesSupabase'
 import { ActivityRanking } from '@/components/molecules/ActivityRanking'
 import { Button } from '@/components/atoms/Button'
 import { icons } from '@/styles'
 import { ROUTES } from '@/constants'
-
-const transformPriceRange = (priceRange: PriceRange): PriceRange => {
-  switch (priceRange) {
-    case 'gratuit':
-      return 'gratuit'
-    case '€':
-      return '€'
-    case '€€':
-      return '€€'
-    case '€€€':
-      return '€€€'
-  }
-}
 
 const HomePage = () => {
   const { largeIconSize, mediumIconSize } = icons
@@ -40,7 +26,7 @@ const HomePage = () => {
         imageUrl: r.imageUrl,
         location: r.location,
         arrondissement: r.arrondissement,
-        priceRange: transformPriceRange(r.priceRange),
+        priceRange: r.priceRange,
         duration: r.duration,
         tags: r.tags,
         website: r.website,
@@ -82,7 +68,7 @@ const HomePage = () => {
             Paris Activities Vote
           </h1>
           <p className="text-gray-600">
-            Discover the family's favorite activities
+            Découvrez les activités favorites de la famille
           </p>
         </div>
 
@@ -90,7 +76,7 @@ const HomePage = () => {
           <div className="mb-6 flex items-center justify-center gap-2 text-sm text-gray-600">
             <Users size={mediumIconSize} />
             <span>
-              Family members: <strong>{allVoters.join(', ')}</strong>
+              Membres de la famille: <strong>{allVoters.join(', ')}</strong>
             </span>
           </div>
         )}
@@ -99,7 +85,7 @@ const HomePage = () => {
           <Link to={ROUTES.VOTE}>
             <Button variant="primary" size="lg">
               <Trophy className="mr-2" size={largeIconSize} />
-              Vote now
+              Voter maintenant
             </Button>
           </Link>
         </div>
@@ -134,7 +120,7 @@ const HomePage = () => {
         {others.length > 0 && (
           <div>
             <h2 className="text-2xl font-bold text-[#0f3460] mb-6">
-              Full ranking
+              Classement complet
             </h2>
             <div className="space-y-4">
               {others.map((stats, index) => (
@@ -151,10 +137,10 @@ const HomePage = () => {
         {sortedStats.length === 0 && (
           <div className="text-center py-12">
             <p className="text-gray-500 mb-4">
-              No votes have been recorded yet.
+              Aucun vote n'a été enregistré encore.
             </p>
             <Link to={ROUTES.VOTE}>
-              <Button variant="primary">Start voting</Button>
+              <Button variant="primary">Commencer à voter</Button>
             </Link>
           </div>
         )}

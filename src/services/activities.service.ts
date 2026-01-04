@@ -8,7 +8,7 @@ export const activitiesService = {
     const { data, error } = await supabase
       .from(database.tables.activities)
       .select('*')
-      .order(database.columns.name, { ascending: true })
+      .order(database.columns.id, { ascending: true })
 
     if (error) throw error
     return data.map(transformActivityFromDB)
